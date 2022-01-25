@@ -154,6 +154,7 @@ cython_debug/
 #DS Store
 .DS_Store 
 
+
 #Directories
 json_files/
 
