@@ -1,8 +1,18 @@
+import imp
 from logging.config import fileConfig
 
 from sqlalchemy import engine_from_config
 from sqlalchemy import pool
-
+#from SQLAlchemy.models.base import Base
+#from SQLAlchemy.models.playlist import Playlists
+#from SQLAlchemy.models.user import Users
+import SQLAlchemy.models.base, SQLAlchemy.models.user
+import SQLAlchemy.models.playlist
+import SQLAlchemy.models.track
+import SQLAlchemy.models.artist
+import SQLAlchemy.models.album
+import SQLAlchemy.models.associations_tables
+from SQLAlchemy.models.config import Config as user_config
 from alembic import context
 
 # this is the Alembic Config object, which provides
@@ -17,13 +27,25 @@ fileConfig(config.config_file_name)
 # for 'autogenerate' support
 # from myapp import mymodel
 # target_metadata = mymodel.Base.metadata
-target_metadata = None
+#target_metadata = SQLAlchemy.models.base.Base.metadata
+target_metadata = SQLAlchemy.models.user.Users.metadata
+
 
 # other values from the config, defined by the needs of env.py,
 # can be acquired:
 # my_important_option = config.get_main_option("my_important_option")
 # ... etc.
+# this will overwrite the ini-file sqlalchemy.url path
+# with the path given in the config of the main code
+# specify database configurations
+db_user = user_config.USER_DB
+db_pwd  = user_config.PASSWORD
+db_host = user_config.HOST
+db_port = user_config.PORT
+db_name = user_config.DATABASE
 
+connection_str = f'mysql+pymysql://{db_user}:{db_pwd}@{db_host}:{db_port}/{db_name}'
+config.set_main_option('sqlalchemy.url', connection_str )
 
 def run_migrations_offline():
     """Run migrations in 'offline' mode.
